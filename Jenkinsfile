@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Встановлення залежностей для тестування API
-                    npm install
+                    sh 'npm install -g newman'
                 }
             }
         }
@@ -26,21 +26,10 @@ pipeline {
             }
         }
 
-        stage('Build and Deploy') {
-            steps {
-                script {
-                    // Додаткові кроки збирання та розгортання
-                }
-            }
-        }
-    }
-
-    post {
+        post {
         always {
-            // Виконується завжди, навіть якщо є помилки
-            script {
-                // Додаткові кроки або повідомлення про завершення пайплайну
-            }
+            // Додаткові дії, які виконуються завжди, навіть якщо є помилки
+            echo 'API test execution completed'
         }
     }
 }
