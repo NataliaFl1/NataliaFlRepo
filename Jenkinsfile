@@ -34,7 +34,7 @@ pipeline {
                 keepAll: true,
                 reportDir: 'newman',
                 reportFiles: '*.html',
-                reportName: 'Newman API Report',
+                reportName: 'Natalia Flekevchuk: API qauto report',
                 reportTitles: ''
             ])
 	}
