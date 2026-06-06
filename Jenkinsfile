@@ -11,7 +11,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'npm install -g newman'
+                    bat 'npm install -g newman'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Run API Tests') {
             steps {
                 script {
-                    sh 'newman run collection.json -d csv_url.csv -r html'
+                    bat 'newman run collection.json -d csv_url.csv -r html'
                 }
             }
         }
