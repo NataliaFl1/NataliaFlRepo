@@ -28,7 +28,6 @@ pipeline {
         post {
         always {
             echo 'API test execution completed'
-        }
 	    publishHTML([
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
@@ -38,5 +37,6 @@ pipeline {
                 reportName: 'Newman API Report',
                 reportTitles: ''
             ])
+	}
     }
 }
