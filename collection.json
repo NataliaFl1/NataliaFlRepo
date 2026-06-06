@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "42a02674-ce5e-4e87-9791-ac7183c35702",
-    "name": "Natalia Flekevchuk collection lesson 15",
+    "_postman_id": "c9e0868b-bd7e-4725-b6c4-a5c095f5c820",
+    "name": "Natalia Flekevchuk collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "8953882"
   },
@@ -275,7 +275,82 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "Logout",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/auth/logout",
+                  "host": [
+                    "{{URL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "",
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "nginx"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 20 May 2026 14:24:44 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "15"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "remember_me=; Domain=.forstudy.space; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "sid=; Domain=.forstudy.space; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"error\"\n}"
+            }
+          ]
         },
         {
           "name": "Login",
@@ -490,7 +565,7 @@
       "name": "Negative",
       "item": [
         {
-          "name": "Create user validation",
+          "name": "Create user password validation1",
           "event": [
             {
               "listen": "prerequest",
@@ -510,12 +585,10 @@
                   "pm.test(\"Status code is 400\", function () {\r",
                   "    pm.response.to.have.status(400);\r",
                   "});\r",
-                  "pm.test(\"Verify body error message\", function () {\r",
+                  "pm.test(\"Body matches string\", function () {\r",
                   "var jsonData = pm.response.json();\r",
-                  "pm.expect(jsonData.message).to.include(pm.variables.get('csv_message'));\r",
-                  "});\r",
-                  "\r",
-                  ""
+                  "pm.expect(jsonData.message).to.include('\\\"password\\\" is not allowed to be empty');\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -528,7 +601,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"{{csv_name}}\",\r\n  \"lastName\": \"{{csv_lastName}}\",\r\n  \"email\": \"{{csv_email}}\",\r\n  \"password\": \"{{csv_password}}\",\r\n  \"repeatPassword\": \"{{csv_repeatPassword}}\"\r\n}\r\n\r\n",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"\",\r\n  \"repeatPassword\": \"Qwerty12345\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -549,27 +622,8 @@
           "response": []
         },
         {
-          "name": "Edit profile validation",
+          "name": "Create user password validation2",
           "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 400\", function () {\r",
-                  "    pm.response.to.have.status(400);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Verify body error message\", function () {\r",
-                  "var jsonData = pm.response.json();\r",
-                  "pm.expect(jsonData.message).to.include(pm.variables.get('csv_updatedMessage'));\r",
-                  "});\r",
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
             {
               "listen": "prerequest",
               "script": {
@@ -580,14 +634,31 @@
                 "packages": {},
                 "requests": {}
               }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "pm.test(\"Body matches string\", function () {\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.expect(jsonData.message).to.eql('Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
             }
           ],
           "request": {
-            "method": "PUT",
+            "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"photo\": \"{{csv_updatedPhoto}}\",\r\n  \"name\": \"{{csv_updatedName}}\",\r\n  \"lastName\": \"{{csv_updatedLastName}}\",\r\n  \"dateBirth\": \"{{csv_updatedDateBirth}}\",\r\n  \"country\": \"{{csv_updatedCountry}}\"\r\n}",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"password\",\r\n  \"repeatPassword\": \"password\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -595,13 +666,388 @@
               }
             },
             "url": {
-              "raw": "{{URL}}/users/profile",
+              "raw": "{{URL}}/auth/signup",
               "host": [
                 "{{URL}}"
               ],
               "path": [
-                "users",
-                "profile"
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create user password validation3",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "pm.test(\"Body matches string\", function () {\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.expect(jsonData.message).to.include('Password is required');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create user password validation4",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "pm.test(\"Body matches string\", function () {\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.expect(jsonData.message).to.include('Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"Pass5\",\r\n  \"repeatPassword\": \"Pass5\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create user password validation5",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "pm.test(\"Body matches string\", function () {\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.expect(jsonData.message).to.include('Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"Pass512345asdfgQ\",\r\n  \"repeatPassword\": \"Pass512345asdfgQ\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "new request for validation user",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Error messsage is correct\", function () {\r",
+                  "pm.expect(jsonData.message).to.eql(\"Ім'я невірне\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Name is string\", function() {\r",
+                  "    pm.expect(jsonData.email).to.be.a('string')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "uk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": 1,\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"Qwerty12345\",\r\n  \"repeatPassword\": \"Qwerty12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "new request for validation user 2",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Error message validation\", function () {\r",
+                  "pm.expect(jsonData.message).to.eql('Невірний пароль');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Password is string\", function() {\r",
+                  "    pm.expect(jsonData.email).to.be.a('string')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "uk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": true,\r\n  \"repeatPassword\": \"Qwerty12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "new request for validation user 3",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "pm.test(\"Error message validation\", function () {\r",
+                  "pm.expect(jsonData.message).to.eql('Невірно вказана пошта');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email is string\", function() {\r",
+                  "    pm.expect(jsonData.email).to.be.a('string')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "uk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": {\r\n    \"user\": \"test\",\r\n    \"domain\": \"google.com\"\r\n  },\r\n  \"password\": \"Qwerty12345\",\r\n  \"repeatPassword\": \"Qwerty12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/signup",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
               ]
             }
           },
